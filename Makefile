@@ -696,9 +696,9 @@ endif
 
 export LLVM_AR LLVM_NM
 
-# Set O3 optimization level for LTO
+# Set O3 optimization level for LTO with most linkers
 LDFLAGS		+= --plugin-opt=O3
-
+LDFLAGS		+= --plugin-opt=-import-instr-limit=40
 endif
 
 # The arch Makefile can set ARCH_{CPP,A,C}FLAGS to override the default
@@ -725,6 +725,10 @@ KBUILD_CFLAGS	+= -mcpu=cortex-a76.cortex-a55 -mtune=cortex-a76.cortex-a55
 endif
 ifeq ($(cc-name),clang)
 KBUILD_CFLAGS	+= -mcpu=cortex-a76 -mtune=cortex-a76
+
+ifdef CONFIG_LTO_CLANG
+KBUILD_CFLAG	+= -fwhole-program-vtables
+endif
 
 ifdef CONFIG_LLVM_POLLY
 KBUILD_CFLAGS	+= -mllvm -polly \
@@ -817,7 +821,10 @@ endif
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
 
 ifeq ($(ld-name),lld)
-LDFLAGS += -O3 --lto-O3
+LDFLAGS += --lto-O3
+else
+LDFLAGS += -O3
+KBUILD_LDFLAGS += $(LDFLAGS) 
 endif
 
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
