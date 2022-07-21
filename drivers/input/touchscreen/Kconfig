@@ -1304,8 +1304,8 @@ config TOUCHSCREEN_COMMON
 
 	  If unsure, say N.
 
+source "drivers/input/touchscreen/focaltech_touch/Kconfig"
 source "drivers/input/touchscreen/nt36xxx_spi/Kconfig"
-
-source "drivers/input/touchscreen/xiaomi/Kconfig" 
+source "drivers/input/touchscreen/xiaomi/Kconfig"
 
 endif
